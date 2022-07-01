@@ -18,6 +18,9 @@ if android_version == '10':
 if arch == 'aarch64':
   base_libs += ['log', 'utils', 'gui', 'ui', 'CB', 'gsl', 'adreno_utils', 'cutils', 'uuid', File("/system/lib64/liblzma.so")]
 
+qt_env.Append(CXXFLAGS = '-D__ANDROID_API__=29')
+qt_env.Append(CXXFLAGS = '-D__ANDROID_API_FUTURE__=29')
+
 if maps and arch == 'x86_64':
   rpath = [Dir(f"#third_party/mapbox-gl-native-qt/{arch}").srcnode().abspath]
   qt_env["RPATH"] += rpath
