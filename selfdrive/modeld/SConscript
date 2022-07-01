@@ -1,10 +1,21 @@
 import os
+import subprocess
+
+real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
+
+android_version = 0
+if arch == "aarch64":
+  android_version = subprocess.check_output(["getprop", "ro.build.version.release"], encoding='utf8').rstrip()
 
 Import('env', 'arch', 'cereal', 'messaging', 'common', 'gpucommon', 'visionipc')
 lenv = env.Clone()
 
 libs = [cereal, messaging, common, visionipc, gpucommon,
         'OpenCL', 'SNPE', 'symphony-cpu', 'capnp', 'zmq', 'kj', 'yuv']
+
+if android_version == '10':
+  libs.remove('symphony-cpu')
+  libs += [File('#third_party/android_libs/libgsl.so')]
 
 def get_dlsym_offset():
   """Returns the offset between dlopen and dlsym in libdl.so"""

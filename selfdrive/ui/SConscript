@@ -1,4 +1,5 @@
 import os
+import subprocess
 Import('qt_env', 'arch', 'common', 'messaging', 'gpucommon', 'visionipc',
        'cereal', 'transformations')
 
@@ -6,6 +7,13 @@ base_libs = [gpucommon, common, messaging, cereal, visionipc, transformations, '
              'capnp', 'kj', 'm', 'OpenCL', 'ssl', 'crypto', 'pthread'] + qt_env["LIBS"]
 
 maps = arch in ['larch64', 'x86_64']
+
+real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
+android_version = 0
+if arch == "aarch64":
+    android_version = subprocess.check_output(["getprop", "ro.build.version.release"], encoding='utf8').rstrip()
+if android_version == '10':
+  base_libs += [File('#third_party/android_libs/libgsl.so')]
 
 if arch == 'aarch64':
   base_libs += ['log', 'utils', 'gui', 'ui', 'CB', 'gsl', 'adreno_utils', 'cutils', 'uuid', File("/system/lib64/liblzma.so")]

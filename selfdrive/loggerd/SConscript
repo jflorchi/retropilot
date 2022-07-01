@@ -1,3 +1,4 @@
+import subprocess
 Import('env', 'arch', 'cereal', 'messaging', 'common', 'visionipc', 'gpucommon')
 
 
@@ -5,6 +6,13 @@ libs = [common, cereal, messaging, visionipc,
         'zmq', 'capnp', 'kj', 'z',
         'avformat', 'avcodec', 'swscale', 'avutil',
         'yuv', 'bz2', 'OpenCL']
+
+real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
+android_version = 0
+if arch == "aarch64":
+  android_version = subprocess.check_output(["getprop", "ro.build.version.release"], encoding='utf8').rstrip()
+if android_version == '10':
+  libs += [File('#third_party/android_libs/libgsl.so'), File('/vendor/lib64/libplatformconfig.so'), File('/vendor/lib64/vendor.qti.hardware.capabilityconfigstore@1.0.so')]
 
 src = ['logger.cc', 'loggerd.cc']
 if arch in ["aarch64", "larch64"]:

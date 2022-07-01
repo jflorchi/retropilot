@@ -96,6 +96,11 @@ if arch == "aarch64" or arch == "larch64":
     f"#third_party/acados/{arch}/lib",
   ]
 
+  if android_version == "10":
+    libpath.append("/apex/com.android.runtime@1/lib64")
+    libpath.append("/system/lib64")
+    libpath.append("/vendor/lib64")
+
   if arch == "larch64":
     libpath += [
       "#third_party/snpe/larch64",
@@ -204,6 +209,32 @@ if arch == "aarch64" and android_version == "9":
     "#third_party/android_headers_9/android_frameworks_native/libs/ui/include",
     "#third_party/android_headers_9/android_frameworks_native/libs/gui/include",
     "#third_party/android_headers_9/android_frameworks_av/include",
+  ]
+
+
+if arch == "aarch64" and android_version == "10":
+  cflags += ["-DANDROID_10"]
+  cxxflags += ["-DANDROID_10"]
+  android_header_paths = [
+    "#third_party/android_headers/android_system_core/libsystem/include",
+    "#third_party/android_headers/android_system_core/libutils/include",
+    "#third_party/android_headers/android_system_core/liblog/include",
+    "#third_party/android_headers/android_system_core/libcutils/include",
+    "#third_party/android_headers/android_system_core/base/include",
+    "#third_party/android_headers/android_system_core/include",
+    "#third_party/android_headers/android_hardware_libhardware/include",
+    "#third_party/android_headers/android_hardware_hidl/base/include",
+    "#third_party/android_headers/android_hardware_hidl/transport/token/1.0/utils/include",
+    "#third_party/android_headers/android_hardware_hidl/output",
+    "#third_party/android_headers/android_frameworks_native/include",
+    "#third_party/android_headers/android_frameworks_native/libs/math/include",
+    "#third_party/android_headers/android_frameworks_native/libs/nativebase/include",
+    "#third_party/android_headers/android_frameworks_native/libs/nativewindow/include",
+    "#third_party/android_headers/android_frameworks_native/libs/binder/include",
+    "#third_party/android_headers/android_frameworks_native/libs/ui/include",
+    "#third_party/android_headers/android_frameworks_native/libs/gui/include",
+    "#third_party/android_headers/android_frameworks_av/include",
+    "#third_party/android_headers",
   ]
 
 env = Environment(
