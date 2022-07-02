@@ -21,7 +21,7 @@
 
 #ifdef QCOM
 #include "CL/cl_ext_qcom.h"
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
 #include "selfdrive/camerad/cameras/camera_android.h"
 #include "CL/cl_ext_qcom.h"
 #else
@@ -56,7 +56,7 @@ public:
              ci->frame_width, ci->frame_height, ci->frame_stride,
              b->rgb_width, b->rgb_height, b->rgb_stride,
              ci->bayer_flip, ci->hdr, s->camera_num);
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
     const char *cl_file = "cameras/real_debayer10.cl";
 #else
     const char *cl_file = Hardware::TICI() ? "cameras/real_debayer.cl" : "cameras/debayer.cl";
@@ -70,7 +70,7 @@ public:
     CL_CHECK(clSetKernelArg(krnl_, 0, sizeof(cl_mem), &cam_buf_cl));
     CL_CHECK(clSetKernelArg(krnl_, 1, sizeof(cl_mem), &buf_cl));
 
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
     if (true) {
 #else
     if (Hardware::TICI()) {
@@ -122,6 +122,8 @@ void CameraBuf::init(cl_device_id device_id, cl_context context, CameraState *s,
   const int frame_size = ci->frame_height * ci->frame_stride;
   camera_bufs = std::make_unique<VisionBuf[]>(frame_buf_count);
   camera_bufs_metadata = std::make_unique<FrameMetadata[]>(frame_buf_count);
+
+  LOG("frame_dimensions %d %d", ci->frame_height, ci->frame_stride);
 
   for (int i = 0; i < frame_buf_count; i++) {
     LOG("allocating frame %d, frame_size=%d", i, frame_size);
@@ -188,7 +190,7 @@ bool CameraBuf::acquire() {
     float gain = 0.0;
 
 #ifndef QCOM2
-#ifndef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
     gain = camera_state->digital_gain;
     if ((int)gain == 0) gain = 1.0;
 #endif

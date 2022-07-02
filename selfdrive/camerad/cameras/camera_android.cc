@@ -9,7 +9,7 @@
 #include "selfdrive/common/util.h"
 
 // id of the video capturing device
-const int ROAD_CAMERA_INDEX = util::getenv("ROADCAM_ID", 0);
+const int ROAD_CAMERA_INDEX = util::getenv("ROADCAM_ID", 2);
 const int DRIVER_CAMERA_INDEX = util::getenv("DRIVERCAM_ID", 1);
 
 //TODO: get supported resolution from param
@@ -178,12 +178,12 @@ static void driver_camera_thread(CameraState *s) {
 
 void cameras_init(VisionIpcServer *v, MultiCameraState *s, cl_device_id device_id, cl_context ctx) {
 #if ROAD
-  LOG("*** init road camera ***");
+  LOG("*** init road camera *** device_id %d", device_id);
   s->road_cam.camera_init(s, v, ROAD_CAMERA_INDEX, CAMERA_ID_IMX363, 20, device_id, ctx,
                           VISION_STREAM_RGB_ROAD, VISION_STREAM_ROAD);
 #endif
 #if DRIVER
-  LOG("*** init driver camera ***");
+  LOG("*** init driver camera *** device_id %d", device_id);
   s->driver_cam.camera_init(s, v, DRIVER_CAMERA_INDEX, CAMERA_ID_IMX355, 10, device_id, ctx,
                             VISION_STREAM_RGB_DRIVER, VISION_STREAM_DRIVER);
 #endif
