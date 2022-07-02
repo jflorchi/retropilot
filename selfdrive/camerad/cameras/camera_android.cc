@@ -9,7 +9,7 @@
 #include "selfdrive/common/util.h"
 
 // id of the video capturing device
-const int ROAD_CAMERA_INDEX = util::getenv("ROADCAM_ID", 2);
+const int ROAD_CAMERA_INDEX = util::getenv("ROADCAM_ID", 0);
 const int DRIVER_CAMERA_INDEX = util::getenv("DRIVERCAM_ID", 1);
 
 //TODO: get supported resolution from param

@@ -231,7 +231,7 @@ OmxEncoder::OmxEncoder(const char* filename, int width, int height, int fps, int
 
   if (h265) {
     // setup HEVC
-  #if defined(ANDROID_9) || defined (QCOM2)
+  #if defined(ANDROID_9) || defined (QCOM2) || defined(ANDROID_10)
     OMX_VIDEO_PARAM_PROFILELEVELTYPE hevc_type = {0};
     OMX_INDEXTYPE index_type = OMX_IndexParamVideoProfileLevelCurrent;
   #else
@@ -342,7 +342,7 @@ void OmxEncoder::callback_handler(OmxEncoder *e) {
 
     e->to_write.push(new_buffer);
 
-#if defined(QCOM2) || defined(ANDROID_9)
+#if defined(QCOM2) || defined(ANDROID_9) || defined(ANDROID_10)
     if (buffer->nFlags & OMX_BUFFERFLAG_CODECCONFIG) {
       buffer->nTimeStamp = 0;
     }
@@ -389,7 +389,7 @@ void OmxEncoder::handle_out_buf(OmxEncoder *e, OmxBuffer *out_buf) {
     memcpy(e->codec_config, out_buf->data, out_buf->header.nFilledLen);
 
     // TODO: is still needed?
-#if defined(QCOM2) || defined(ANDROID_9)
+#if defined(QCOM2) || defined(ANDROID_9) || defined(ANDROID_10)
     out_buf->header.nTimeStamp = 0;
 #endif
   }
@@ -547,7 +547,7 @@ void OmxEncoder::encoder_open(const char* path) {
       assert(this->of);
 
 #ifndef QCOM2
-#ifndef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
       if (this->codec_config_len > 0) {
         util::safe_fwrite(this->codec_config, 1, this->codec_config_len, this->of);
       }

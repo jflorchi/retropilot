@@ -1,5 +1,5 @@
 #include <android/log.h>
-#ifndef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
 #include <log/logger.h>
 #else
 #include <log/log.h>

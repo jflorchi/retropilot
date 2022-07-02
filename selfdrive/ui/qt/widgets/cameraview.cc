@@ -34,7 +34,7 @@ const char frame_fragment_shader[] =
   "precision mediump float;\n"
 #endif
   "uniform sampler2D uTextureY;\n"
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   "uniform sampler2D uTextureUV;\n"
 #else
   "uniform sampler2D uTextureU;\n"
@@ -44,7 +44,7 @@ const char frame_fragment_shader[] =
   "out vec4 colorOut;\n"
   "void main() {\n"
   "  float y = texture(uTextureY, vTexCoord).r;\n"
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   "  float u = texture(uTextureUV, vTexCoord).g - 0.5;\n"
   "  float v = texture(uTextureUV, vTexCoord).r - 0.5;\n"
 #else
@@ -120,7 +120,7 @@ CameraViewWidget::~CameraViewWidget() {
     glDeleteVertexArrays(1, &frame_vao);
     glDeleteBuffers(1, &frame_vbo);
     glDeleteBuffers(1, &frame_ibo);
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
     glDeleteBuffers(2, textures);
 #else
     glDeleteBuffers(3, textures);
@@ -168,14 +168,14 @@ void CameraViewWidget::initializeGL() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   glGenTextures(2, textures);
 #else
   glGenTextures(3, textures);
 #endif
   glUseProgram(program->programId());
   glUniform1i(program->uniformLocation("uTextureY"), 0);
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   glUniform1i(program->uniformLocation("uTextureUV"), 1);
 #else
   glUniform1i(program->uniformLocation("uTextureU"), 1);
@@ -248,7 +248,7 @@ void CameraViewWidget::paintGL() {
   glBindVertexArray(frame_vao);
 
   glUseProgram(program->programId());
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   uint8_t *address[2] = {latest_frame->y, latest_frame->u};
   for (int i = 0; i < 2; ++i) {
     glActiveTexture(GL_TEXTURE0 + i);
@@ -290,7 +290,7 @@ void CameraViewWidget::vipcConnected(VisionIpcClient *vipc_client) {
   stream_height = vipc_client->buffers[0].height;
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#ifdef ANDROID_9
+#if defined(ANDROID_9) || defined(ANDROID_10)
   for (int i = 0; i < 2; ++i) {
     glBindTexture(GL_TEXTURE_2D, textures[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
