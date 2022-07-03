@@ -6,7 +6,7 @@ real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rst
 android_version = 0
 if arch == "aarch64":
   android_version = subprocess.check_output(["getprop", "ro.build.version.release"], encoding='utf8').rstrip()
-libs = ['m', 'pthread', common, 'jpeg', 'OpenCL', 'yuv', cereal, messaging, 'zmq', 'capnp', 'kj', visionipc, gpucommon]
+libs = ['m', 'pthread', common, 'jpeg', 'OpenCL', 'yuv', cereal, messaging, 'zmq', 'capnp', 'kj', visionipc, gpucommon, 'ion', 'lzma', 'xml2']
 
 if android_version == '10':
   libs += [File('#third_party/android_libs/libgsl.so'), File('#third_party/android_libs/libandroidicu.so'), File('#third_party/android_libs/libnativehelper.so')]

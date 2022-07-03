@@ -5,7 +5,7 @@ Import('env', 'arch', 'cereal', 'messaging', 'common', 'visionipc', 'gpucommon')
 libs = [common, cereal, messaging, visionipc,
         'zmq', 'capnp', 'kj', 'z',
         'avformat', 'avcodec', 'swscale', 'avutil',
-        'yuv', 'bz2', 'OpenCL']
+        'yuv', 'bz2', 'OpenCL', 'ion', File('/system/lib64/liblzma.so'), 'xml2']
 
 real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
 android_version = 0
