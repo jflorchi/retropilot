@@ -11,11 +11,11 @@ Import('env', 'arch', 'cereal', 'messaging', 'common', 'gpucommon', 'visionipc')
 lenv = env.Clone()
 
 libs = [cereal, messaging, common, visionipc, gpucommon,
-        'OpenCL', 'SNPE', 'symphony-cpu', 'capnp', 'zmq', 'kj', 'yuv', 'ion', File('/system/lib64/liblzma.so'), 'xml2']
+        'OpenCL', 'SNPE', 'symphony-cpu', 'capnp', 'zmq', 'kj', 'yuv']
 
 if android_version == '10':
   libs.remove('symphony-cpu')
-  libs += [File('#third_party/android_libs/libgsl.so')]
+  libs += [File('#third_party/android_libs/libgsl.so'), 'ion', File('/system/lib64/liblzma.so'), 'xml2']
 
 def get_dlsym_offset():
   """Returns the offset between dlopen and dlsym in libdl.so"""

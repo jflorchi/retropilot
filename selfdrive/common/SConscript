@@ -1,4 +1,10 @@
+import subprocess
 Import('env', 'arch', 'SHARED')
+
+real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
+android_version = 0
+if arch == "aarch64":
+  android_version = subprocess.check_output(["getprop", "ro.build.version.release"], encoding='utf8').rstrip()
 
 if SHARED:
   fxn = env.SharedLibrary
@@ -15,7 +21,13 @@ common_libs = [
   'watchdog.cc',
 ]
 
-_common = fxn('common', common_libs, LIBS=["json11", 'ion', 'lzma', 'xml2'])
+libs = ['json11']
+if android_version == '10':
+  libs.append('ion')
+  libs.append('lzma')
+  libs.append('xml2')
+
+_common = fxn('common', common_libs, LIBS=["json11"])
 
 files = [
   'clutil.cc',
